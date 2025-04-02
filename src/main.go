@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -14,6 +15,10 @@ import (
 
 var (
 	loveCmd *exec.Cmd
+	// 添加防抖动相关变量
+	debounceTimer *time.Timer
+	debounceMutex sync.Mutex
+	lastReload    time.Time
 )
 
 func main() {
@@ -55,7 +60,8 @@ func main() {
 					continue
 				}
 				fmt.Println("Detected change in:", event.Name)
-				restartLove()
+				// 使用防抖动机制重启
+				debouncedRestartLove()
 			case err, ok := <-watcher.Errors:
 				if !ok {
 					return
@@ -89,6 +95,25 @@ func restartLove() {
 	// 短暂延迟以确保进程完全退出
 	time.Sleep(100 * time.Millisecond)
 	startLove()
+}
+
+// 防抖动重启函数
+func debouncedRestartLove() {
+	debounceMutex.Lock()
+	defer debounceMutex.Unlock()
+
+	// 如果已经有定时器在运行，重置它
+	if debounceTimer != nil {
+		debounceTimer.Stop()
+	}
+
+	// 设置新的定时器
+	debounceTimer = time.AfterFunc(500*time.Millisecond, func() {
+		debounceMutex.Lock()
+		lastReload = time.Now()
+		debounceMutex.Unlock()
+		restartLove()
+	})
 }
 
 // 忽略不相关的文件
