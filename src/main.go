@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -95,15 +96,28 @@ func shouldIgnore(file string) bool {
 	// 忽略临时文件、隐藏文件等
 	ignoredExts := []string{".swp", ".tmp", ".log"}
 	ignoredPrefixes := []string{".", "_"}
+	ignoredDirs := []string{".git"}
+	
+	// 检查文件扩展名
 	for _, ext := range ignoredExts {
 		if filepath.Ext(file) == ext {
 			return true
 		}
 	}
+	
+	// 检查文件前缀
 	for _, prefix := range ignoredPrefixes {
 		if filepath.Base(file)[0:1] == prefix {
 			return true
 		}
 	}
+	
+	// 检查目录
+	for _, dir := range ignoredDirs {
+		if strings.Contains(file, "/"+dir+"/") || strings.HasPrefix(file, dir+"/") {
+			return true
+		}
+	}
+	
 	return false
 }
