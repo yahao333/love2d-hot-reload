@@ -31,15 +31,19 @@ go mod download
 
 3. 构建项目：
 ```bash
-go build -o love2d-hot-reload
+make
+```
+或者手动构建：
+```bash
+go build -o build/hot-reload.bin src/main.go
 ```
 
 ## 使用方法
 
-1. 将 `love2d-hot-reload` 可执行文件放在你的 LÖVE2D 项目目录中
+1. 将 `build/hot-reload.bin` 可执行文件放在你的 LÖVE2D 项目目录中
 2. 运行工具：
 ```bash
-./love2d-hot-reload
+./hot-reload.bin
 ```
 
 工具将会：
@@ -56,10 +60,10 @@ go build -o love2d-hot-reload
 
 ## 配置说明
 
-可以通过修改 `main.go` 中的以下内容来配置工具：
+可以通过修改 `src/main.go` 中的以下内容来配置工具：
 - 项目目录路径
 - 忽略的文件模式
-- 防抖动时间
+- 防抖动时间（默认：500毫秒）
 - LÖVE2D 可执行文件路径
 
 ## 贡献指南

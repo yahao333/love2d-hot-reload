@@ -31,15 +31,19 @@ go mod download
 
 3. Build the project:
 ```bash
-go build -o love2d-hot-reload
+make
+```
+or manually:
+```bash
+go build -o build/hot-reload.bin src/main.go
 ```
 
 ## Usage
 
-1. Place the `love2d-hot-reload` executable in your LÖVE2D project directory
+1. Place the `build/hot-reload.bin` executable in your LÖVE2D project directory
 2. Run the tool:
 ```bash
-./love2d-hot-reload
+./hot-reload.bin
 ```
 
 The tool will:
@@ -56,10 +60,10 @@ The tool will:
 
 ## Configuration
 
-The tool can be configured by modifying the following in `main.go`:
+The tool can be configured by modifying the following in `src/main.go`:
 - Project directory path
 - Ignored file patterns
-- Debounce timing
+- Debounce timing (default: 500ms)
 - LÖVE2D executable path
 
 ## Contributing
