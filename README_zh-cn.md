@@ -9,6 +9,7 @@
 - 跨平台支持（主要在 macOS 上测试）
 - 防抖动重载机制，避免频繁重启
 - 可配置的文件忽略模式
+- 支持环境变量配置
 
 ## 前置要求
 
@@ -41,7 +42,11 @@ go build -o build/hot-reload.bin src/main.go
 ## 使用方法
 
 1. 将 `build/hot-reload.bin` 可执行文件放在你的 LÖVE2D 项目目录中
-2. 运行工具：
+2. （可选）设置环境变量进行配置：
+```bash
+export LOVE2D_DEBOUNCE_TIME=1000  # 设置防抖动时间（毫秒，默认：1000ms）
+```
+3. 运行工具：
 ```bash
 ./hot-reload.bin
 ```
@@ -60,11 +65,16 @@ go build -o build/hot-reload.bin src/main.go
 
 ## 配置说明
 
-可以通过修改 `src/main.go` 中的以下内容来配置工具：
-- 项目目录路径
-- 忽略的文件模式
-- 防抖动时间（默认：500毫秒）
-- LÖVE2D 可执行文件路径
+工具可以通过两种方式配置：
+
+1. 环境变量：
+   - `LOVE2D_DEBOUNCE_TIME`：设置防抖动时间（毫秒，默认：1000ms，最小值：100ms）
+
+2. 源代码配置：
+   修改 `src/main.go` 中的以下内容：
+   - 项目目录路径
+   - 忽略的文件模式
+   - LÖVE2D 可执行文件路径
 
 ## 贡献指南
 

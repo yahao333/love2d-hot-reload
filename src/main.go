@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -19,7 +20,30 @@ var (
 	debounceTimer *time.Timer
 	debounceMutex sync.Mutex
 	lastReload    time.Time
+	// 防抖动时间配置（毫秒）
+	debounceTime = getDebounceTime()
 )
+
+// 从环境变量获取防抖动时间，默认1000毫秒
+func getDebounceTime() time.Duration {
+	envTime := os.Getenv("LOVE2D_DEBOUNCE_TIME")
+	if envTime == "" {
+		return 1000 * time.Millisecond
+	}
+	
+	timeMs, err := strconv.Atoi(envTime)
+	if err != nil {
+		log.Printf("Invalid debounce time in environment variable, using default 1000ms: %v", err)
+		return 1000 * time.Millisecond
+	}
+	
+	if timeMs < 100 {
+		log.Printf("Debounce time too small, using minimum 100ms")
+		return 100 * time.Millisecond
+	}
+	
+	return time.Duration(timeMs) * time.Millisecond
+}
 
 func main() {
 	// 创建文件监控器
@@ -108,7 +132,7 @@ func debouncedRestartLove() {
 	}
 
 	// 设置新的定时器
-	debounceTimer = time.AfterFunc(500*time.Millisecond, func() {
+	debounceTimer = time.AfterFunc(debounceTime, func() {
 		debounceMutex.Lock()
 		lastReload = time.Now()
 		debounceMutex.Unlock()

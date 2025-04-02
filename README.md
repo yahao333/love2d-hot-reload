@@ -9,6 +9,7 @@ A hot-reload tool for LÖVE2D projects implemented in Go (Golang). This tool lev
 - Cross-platform support (primarily tested on macOS)
 - Debounced reload mechanism to prevent excessive restarts
 - Configurable file ignore patterns
+- Environment variable configuration support
 
 ## Prerequisites
 
@@ -41,7 +42,11 @@ go build -o build/hot-reload.bin src/main.go
 ## Usage
 
 1. Place the `build/hot-reload.bin` executable in your LÖVE2D project directory
-2. Run the tool:
+2. (Optional) Set environment variables for configuration:
+```bash
+export LOVE2D_DEBOUNCE_TIME=1000  # Set debounce time in milliseconds (default: 1000ms)
+```
+3. Run the tool:
 ```bash
 ./hot-reload.bin
 ```
@@ -60,11 +65,16 @@ The tool will:
 
 ## Configuration
 
-The tool can be configured by modifying the following in `src/main.go`:
-- Project directory path
-- Ignored file patterns
-- Debounce timing (default: 500ms)
-- LÖVE2D executable path
+The tool can be configured in two ways:
+
+1. Environment Variables:
+   - `LOVE2D_DEBOUNCE_TIME`: Set debounce time in milliseconds (default: 1000ms, minimum: 100ms)
+
+2. Source Code Configuration:
+   Modify the following in `src/main.go`:
+   - Project directory path
+   - Ignored file patterns
+   - LÖVE2D executable path
 
 ## Contributing
 
