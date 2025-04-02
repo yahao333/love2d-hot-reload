@@ -28,13 +28,13 @@ var (
 func getDebounceTime() time.Duration {
 	envTime := os.Getenv("LOVE2D_DEBOUNCE_TIME")
 	if envTime == "" {
-		return 1000 * time.Millisecond
+		return 3000 * time.Millisecond
 	}
 	
 	timeMs, err := strconv.Atoi(envTime)
 	if err != nil {
-		log.Printf("Invalid debounce time in environment variable, using default 1000ms: %v", err)
-		return 1000 * time.Millisecond
+		log.Printf("Invalid debounce time in environment variable, using default 3000ms: %v", err)
+		return 3000 * time.Millisecond
 	}
 	
 	if timeMs < 100 {
